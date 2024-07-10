@@ -1,19 +1,18 @@
-img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png"
-alt="A Python Project Repo" width="40%" height="40%"  /></a>
+![A Python Project Repo](https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png)
 
 ---
 
-# Training Manager
+# StuCo App
 
 A Web Application created with the Django Framework
 
-###### This project was created with [Cookiecutter](https://github.com/audreyr/cookiecutter) and the STO Project Generator (SPG).
+###### This project was created with [Cookiecutter](https://github.com/audreyr/cookiecutter).
 
 ---
 
 ## Powered by Poetry
 
-Projects created with the STO Project Generator now utilize Poetry
+Projects created with the Project Generator now utilize Poetry
 [https://python-poetry.org](https://python-poetry.org)
 to manage a virtual environment and the project dependencies. The included Makefile will install poetry for you automatically you don't already have it installed.
 
@@ -21,7 +20,7 @@ to manage a virtual environment and the project dependencies. The included Makef
 
 ## Pre-requisite Requirements:
 
-- Projects created with the **STO Project Generator** aka **SPG** should have the following tools installed in order to obtain the maximum feature set :
+- Projects created with the **Project Generator** aka **SPG** should have the following tools installed in order to obtain the maximum feature set :
 
   - The **python** command (note there is no '3' at the end) must be available and point to a Version 3 or greater of Python.
   - **git** should be installed and be at **least version 2.28** so that the default branch can be set as **main** in keeping with the current times. Additionally, you should set your default branch to **main** using the command:
