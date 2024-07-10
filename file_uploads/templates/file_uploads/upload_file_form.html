@@ -1,0 +1,61 @@
+
+{% extends "layouts/base.html" %}
+{% block title %}Files{% endblock title %}
+{% block content %}
+{% load widget_tweaks %}
+<div class="container">
+	<div class="row">
+		<div class="modal-content col-md-6 mt-3 bg-light p-3 border border-secondary">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              <strong>Oops!</strong> Please correct any errors before continuing.
+            </div>
+          {% endif %}
+          <form method="post" {% if modal %}hx-post="{{ request.path }}" hx-encoding="multipart/form-data"{% endif %} class="row" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="col-md-12">
+                    <label for="file" class="form-label">{{ form.files.label }}</label>
+                    <input
+                        type="file"
+                        class="form-control {% if form.files.errors %} is-invalid {% endif %}"
+                        name="files"
+                        {% if form.files.field.widget.attrs.multiple %}
+                            multiple
+                        {% endif %}
+                        {% if form.files.field.widget.attrs.required %}
+                            required
+                        {% endif %}
+                    >
+                    </input>
+                    {% if form.files.errors %}
+                        <small class="text-danger">{{ form.files.errors }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea
+                        class="form-control {% if form.description.errors %} is-invalid {% endif %}"
+                        name="description"
+                        placeholder="Description of file."
+                        rows="5"
+                    ></textarea>
+                    {% if form.description.errors %}
+                        <small class="text-danger">{{ form.description.errors }}</small>
+                    {% endif %}
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-6 mt-2">
+                        <input type="submit" class="btn btn-primary" name="submit" value="Add {{ form.files.label }}">
+                    </div>
+                    <div class="col-md-6 mt-2">
+                        <a href="{% url 'list_files' %}" class="btn btn-secondary" {% if modal %}data-bs-dismiss="modal" {% endif %}>Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

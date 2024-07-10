@@ -1,0 +1,53 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+
+
+if [ -z "${__db__user}" ]; then
+    base_postgres_image_default_user='postgres'
+    export POSTGRES_USER="${base_postgres_image_default_user}"
+    export __db__user="${base_postgres_image_default_user}"
+fi
+
+postgres_ready() {
+python << END
+import sys
+import sto_python_framework
+import logging
+import psycopg2
+
+
+my_config = sto_python_framework.initialize_framework(
+    "db_check",
+)
+
+LOGGER = logging.getLogger(__name__)
+
+LOGGER.info("Checking if DB is ready")
+
+try:
+    psycopg2.connect(
+        dbname=my_config.cp_style_get("db", "db_name"),
+        user=my_config.cp_style_get("db", "user"),
+        password=my_config.cp_style_get("db", "password"),
+        host=my_config.cp_style_get("db", "host"),
+        port=my_config.cp_style_get("db", "port"),
+    )
+except psycopg2.OperationalError:
+    LOGGER.info("DB is not ready yet . . .")
+    sys.exit(-1)
+sys.exit(0)
+
+END
+}
+until postgres_ready; do
+  >&2 echo 'Waiting for PostgreSQL to become available...'
+  sleep 1
+done
+>&2 echo 'PostgreSQL is available'
+
+exec "$@"

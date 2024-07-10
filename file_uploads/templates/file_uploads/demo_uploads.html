@@ -1,0 +1,33 @@
+
+{% extends "layouts/base.html" %}
+{% block title %}Files{% endblock title %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-1 col-xs-1 col-sm-1"></div>
+        <div class="col-md-10 col-xs-10 col-sm-10">
+            <h3 class="round3" style="text-align:center;">Demo Modal Select Files to Upload</h3>
+        </div>
+        <div class="col-md-1 col-xs-1 col-sm-1"></div>
+    </div>
+
+    <div class="row">
+        <div class="px-5 my-5 text-center">
+          <h1>Files for Upload</h1>
+          <p>Demo of capability.</p>
+        </div>
+        <div hx-trigger="load, fileListChanged from:body" hx-get="{% url 'file_list_modal' %}" hx-target="this">
+        </div>
+        <button hx-get="{% url 'upload_files_modal' %}" hx-target="#dialog" class="btn btn-primary" >
+            Add files to be uploaded.
+          </button>
+      </div>
+    <br />
+</div>
+<div id="modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div id="dialog" class="modal-dialog" hx-target="this"></div>
+</div>
+
+{% endblock %}
+

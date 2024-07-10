@@ -1,0 +1,64 @@
+
+
+{% extends "layouts/base.html" %}
+{% block title %}Files{% endblock title %}
+{% block content %}
+<div class="container">
+    {% if not modal %}
+        <div class="row">
+            <div class="col-md-1 col-xs-1 col-sm-1"></div>
+            <div class="col-md-10 col-xs-10 col-sm-10">
+                <h3 class="round3" style="text-align:center;">Files</h3>
+            </div>
+            <div class="col-md-1 col-xs-1 col-sm-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-xs-10 col-sm-10"></div>
+            <div class="col-md-2 col-xs-1 col-sm-1">
+                <br />
+                <a href="{% url 'upload_files' %}">
+                    <button type="button" class="btn btn-success">
+                        <span class="fa fa-plus"></span>
+                        Add File(s)
+                    </button>
+                </a>
+            </div>
+        </div>
+        <br />
+    {% endif %}
+
+    <div class="row text-center">
+        <table class="table table-bordered">
+            <tr class="table-secondary">
+                <th>Name</th>
+                <th>Description</th>
+                {% if not modal %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+            {% for file in files %}
+                <tr class="table-light">
+                    <td>{{ file.name }}</td>
+                    <td>{{ file.description }}</td>
+                    {% if not modal %}
+                        <td>
+                            <a href="{% url 'edit_file' file.pk %}">
+                                <button type="button" class="btn btn-secondary">
+                                    <span class="fa fa-edit"></span>
+                                    Edit
+                                </button></a>
+                            &nbsp;
+                            <a href="{% url 'delete_file' file.pk %}">
+                                <button type="button" class="btn btn-danger">
+                                    <span class="fa fa-trash-can"></span>
+                                    Delete
+                                </button></a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
+

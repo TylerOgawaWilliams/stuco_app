@@ -1,0 +1,141 @@
+.DEFAULT_GOAL := help
+SHELL := bash
+USEZSH := no
+ifneq '$(USE_ZSH)' ''
+USEZSH := $(USE_ZSH)
+endif
+
+DUTY = python3 -m duty -d .spg/duties.py
+
+args = $(foreach a,$($(subst -,_,$1)_args),$(if $(value $a),$a="$($a)"))
+check_code_quality_args = files disable_noqa
+docs_serve_args = host port
+release_args = version
+test_args = type match capture min_coverage_pct
+pylint_args = display_report disable
+tag_version_args = release_candidate_flag
+publish_args = branch_name artifactory_user artifactory_password
+
+# set variable project_root to be the current working directory
+project_root := $(shell pwd)
+
+# if there is an environment variable named SCM_REPO_NAME - that
+# will override the variable project_root
+ifneq '$(SCM_REPO_NAME)' ''
+project_root := $(SCM_REPO_NAME)
+endif
+
+export PROJECT_ROOT := ${project_root}
+
+# Convert hyphens to underscores
+export PROJECT_ROOT_UNDERSCORE := $(shell echo $(PROJECT_ROOT) | tr '-' '_')
+
+
+export PROJECT_SLUG := $(shell basename $(PROJECT_ROOT))
+export PROJECT_SLUG_UNDERSCORE := $(shell basename $(PROJECT_ROOT_UNDERSCORE))
+export DO_INTEGRATION_TESTS := FALSE  ## set this to FALSE to skip all integration tests - when true you MUST set any expected environment variables
+
+docker_image_name = $(PROJECT_SLUG):ci-final
+ifneq '$(IMAGE_NAME)' ''
+docker_image_name := $(IMAGE_NAME)
+endif
+
+BASIC_DUTIES = \
+	build \
+	changelog \
+	clean \
+	deep-clean \
+	format \
+	release \
+	tag-version \
+	verify-not-released \
+	update-dependencies \
+	bundle-for-pypi \
+	publish \
+	requirements-files
+
+QUALITY_DUTIES = \
+	check \
+	check-code-quality \
+	check-dependencies \
+	check-types \
+	pylint \
+	bandit \
+	black \
+	test
+
+UNPUBLISHED_TASKS = \
+	-e clean-coverage \
+	-e install-cicd-tool \
+	-e prepare-bumpversion \
+	-e publish \
+	-e tag-version
+
+show-configured-variables:
+	@echo "--------------------------------------------------------------------------"
+	@echo "Value of PROJECT_SLUG: [${PROJECT_SLUG}]"
+	@echo "Value of PROJECT_SLUG_UNDERSCORE: [${PROJECT_SLUG_UNDERSCORE}]"
+	@echo "Value of Docker Image Name: [${docker_image_name}]"
+	@echo "Value of pwd (used in the docker comands to mount local directory): [${PWD}]"
+	@echo "Value of DO_INTEGRATION_TESTS: [${DO_INTEGRATION_TESTS}]"
+	@echo "Value of BASE_IMAGE: [${BASE_IMAGE}]"
+	@echo "Value of OLD_IMAGE_NAME: [${OLD_IMAGE_NAME}]"
+	@echo "--------------------------------------------------------------------------"
+
+.PHONY: help
+help:
+	@$(DUTY) --list | sort | grep -v $(UNPUBLISHED_TASKS)
+	@echo " "
+	@echo " Additional arguments for test: "
+	@echo "     match='test_*' "
+	@echo "     capture=False "
+	@echo "     type=[unit | integration]"
+	@echo "     min_coverage_pct=25"
+	@echo "     You may also add pytest args by setting ENVVAR PYTEST_ADDOPTS"
+	@echo "        Example: export set PYTEST_ADDOPTS='--lf -x' (to see just the most recent failure if any) "
+	@echo " "
+	@echo " Additional arguments for docs-serve: "
+	@echo "     host='localhost' "
+	@echo "     port=8010 "
+	@echo " "
+	@echo " Additional arguments for check-code-quality: "
+	@echo "     display_noqa=True "
+	@echo "     files='*.py' "
+	@echo " "
+	@echo " Additional arguments for pylint: "
+	@echo "     display_report=[n | y] "
+	@echo "     disable=C0113,C0114 "
+	@echo " "
+	@echo " "
+
+
+.PHONY: $(BASIC_DUTIES)
+$(BASIC_DUTIES): ## Run the basic duties
+	@$(DUTY) $@ $(call args,$@)
+
+.PHONY: $(QUALITY_DUTIES)
+$(QUALITY_DUTIES):  ## Run the basic duties
+	@$(DUTY) $@ $(call args,$@)
+
+bump-patch: ## bump version - patch
+	bumpversion patch --config-file config/.bumpversion.cfg
+
+bump-minor: ## bump version - minor
+	bumpversion minor --config-file config/.bumpversion.cfg
+
+bump-major: ## bump version - major
+	bumpversion major --config-file config/.bumpversion.cfg
+
+coverage: test ## run coverage report
+	open build/coverage_html/index.html
+
+clean-bundle: ## Clean up any previous distribution files
+	rm -rf dist/*
+
+bundle: clean-bundle ## bundle the project for deployment
+	/poetry_venv/bin/poetry build
+
+documentation: .spg/.project_setup ## Generate Documentation
+	sphinx-apidoc -e -M -q -f -o $(PROJECT_SLUG_UNDERSCORE) $(PROJECT_SLUG_UNDERSCORE)/cli
+	sphinx-build -b html docs build/html
+

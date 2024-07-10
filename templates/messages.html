@@ -1,0 +1,23 @@
+
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level_tag == 'success' %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if message.level_tag == 'info' %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+            {% if message.level_tag == 'error' %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+

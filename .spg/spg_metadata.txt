@@ -1,0 +1,33 @@
+#=========================================================================================
+# This file is managed by the Sto Project Generator.
+# Please do not modify it.
+#=========================================================================================
+.dockerignore==2.3.16
+.gitignore==2.3.16
+.gitlab-ci.yml==2.3.16
+.pre-commit-config.yaml==2.3.16
+.spg/.docker/.bashrc==2.3.16
+.spg/.docker/.p10k.zsh==2.3.16
+.spg/.docker/.zshrc==2.3.16
+.spg/DockerMakefile==2.3.16
+.spg/duties.py==2.3.16
+AUTHORS.rst==2.3.16
+CHANGELOG.rst==2.3.16
+Dockerfile==2.3.16
+Makefile==2.3.16
+README.rst==2.3.16
+config/.bumpversion.cfg==2.3.16
+cookiecutter=={"version": "PROJECT_VERSION", "project_type": "django_webapp", "project_name": "StuCo App", "project_slug": "stuco_app", "project_root_dir": "stuco_app", "email": "TylerOgawaWilliams@github.com", "git_username": "TylerOgawaWilliams", "git_url": "http://github.com", "git_group": "TylerOgawaWilliams", "full_name": "Tyler Williams", "project_short_description": "A Web Application created with the Django Framework", "command_line_interface": "click", "url_version": "1"}
+docs/authors.rst==2.3.16
+docs/changelog.rst==2.3.16
+docs/conf.py==2.3.16
+docs/index.rst==2.3.16
+docs/installation.rst==2.3.16
+docs/modules.rst==2.3.16
+docs/readme.rst==2.3.16
+docs/requirements.txt==2.3.16
+docs/usage.rst==2.3.16
+local.config==2.3.16
+main.py==2.3.16
+project_type==django_webapp
+pyproject.toml==2.3.16

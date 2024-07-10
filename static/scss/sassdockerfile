@@ -1,0 +1,14 @@
+# Dart stage
+FROM bufbuild/buf AS buf
+FROM dart:stable AS dart
+
+# Include Protocol Buffer binary
+COPY --from=buf /usr/local/bin/buf /usr/local/bin/
+
+WORKDIR /dart-sass
+RUN git clone https://github.com/sass/dart-sass.git . && \
+  dart pub get && \
+  dart run grinder protobuf
+
+  # This is where you run sass.dart on your scss file(s)
+# RUN dart ./bin/sass.dart /app/sass/example.scss /app/public/css/example.css

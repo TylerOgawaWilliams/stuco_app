@@ -1,0 +1,71 @@
+
+{% extends "layouts/base.html" %}
+{% block title %}Files{% endblock title %}
+{% block content %}
+{% load widget_tweaks %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-6 offset-md-3 mt-3 bg-light p-3 border border-secondary">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              <strong>Oops!</strong> Please correct any errors before continuing.
+            </div>
+          {% endif %}
+
+            <form method="post" class="row g-3" enctype="multipart/form-data">
+                {% csrf_token %}
+				<div class="col-md-12">
+                    <div class="col-md-12">
+                        <label for="file_current" class="form-label">Original File Name</label>
+                        <input type="text" readonly class="form-control-plaintext" id="originalFileName" value="{{ uploaded_file_internal_file_name }}">
+                    </div>
+                </div>
+				<div class="col-md-12">
+                    <div class="col-md-12">
+                        <label for="file_name_from_user" class="form-label">Upload File Name</label>
+                        <input
+                            type="text"
+                            class="form-control {% if form.files.errors %} is-invalid {% endif %}"
+                            name="file_name_from_user"
+                            placeholder="Name you would like use for file.  (Leave blank to keep original name.)"
+                            value="{{ uploaded_file_name_from_user }}"
+                        ></input>
+                    </div>
+                </div>
+                <div class="col-md-12">
+					<label for="description" class="form-label">Description</label>
+					<textarea
+                        class="form-control {% if form.description.errors %} is-invalid {% endif %}"
+                        name="description"
+                        placeholder="Description of file."
+                        rows="5"
+                        required
+                    >{{ form.description.value }}</textarea>
+                    {% if form.description.errors %}
+                        <small class="text-danger">{{ form.description.errors }}</small>
+                    {% endif %}
+				</div>
+
+                <div class="col-md-6">
+					<input type="submit" class="btn btn-primary" name="submit" value="Update">
+				</div>
+				<div class="col-md-6">
+                    <a href="{% url 'list_files'%}" class="btn btn-secondary">Cancel</a>
+				</div>
+			</form><br>
+			<!-- Bootstrap main form end -->
+            <!-- Place PHP Code Here Start-->
+
+            <!-- Place PHP Code Here End-->
+		</div>
+    </div>
+</div>
+{% endblock %}
+
+<button type="submit" class="btn btn-primary"><span class="fa fa-square-check"></span>
+    Update
+</button>
+<button type="submit" class="btn btn-secondary"><span class="fa fa-hand"></span>
+    Cancel
+</button>
+

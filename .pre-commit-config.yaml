@@ -1,0 +1,30 @@
+default_language_version:
+  python: python3.10
+
+default_stages: [commit, push]
+
+repos:
+  - repo: local
+    hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        entry: .poetry_venv/bin/poetry run pyupgrade --py310-plus
+        types: [python]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff-format
+        entry: .poetry_venv/bin/poetry run ruff format --config pyproject.toml
+        types: [python]
+        language: system
+
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff
+        entry: .poetry_venv/bin/poetry run ruff check --config pyproject.toml --fix --show-fixes --exit-non-zero-on-fix
+        types: [python]
+        language: system
+
