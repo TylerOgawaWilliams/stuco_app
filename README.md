@@ -4,7 +4,8 @@
 
 # StuCo App
 
-A Web Application created with the Django Framework
+A Web Application created with the Django Framework for the Carnegie Mellon Student Courses
+Course **98010** - Intro to Submission Grappling.
 
 ###### This project was created with [Cookiecutter](https://github.com/audreyr/cookiecutter).
 
