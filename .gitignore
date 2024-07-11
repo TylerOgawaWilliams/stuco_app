@@ -703,5 +703,7 @@ default_test_output/**
 history
 media/**
 staticfiles/**
-
+requirements.txt
+requirements-dev.txt
+db.sqlite3
 # End of SPG controlled content - anything after this line will be maintained
