@@ -1,0 +1,71 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StuCo App - {% block title %} Title Here {% endblock %}</title>
+
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+    {% block extra_script%}{% endblock %}
+</head>
+<body>
+	<div style="width: 75%; margin: auto">
+
+    <!--header start-->
+    <div style="border-top: 5px solid #7605bc; padding-top: 20px; margin-top: 60px;">
+      <img
+        src="cid:stuco-logo"
+        width="150"
+        alt="StuCo App logo"
+      />
+    </div>
+    <!--/end header-->
+
+    <!--email body start-->
+    <div class="mt4">
+      <br />
+      <h1
+        style="
+          color: black;
+          font-size: 25px;
+          font-weight: 800;
+          margin: 60px 0 30px;
+          font-family: Arial, sans-serif;
+        "
+      >
+        {% block message_heading %}{%endblock%}
+      </h1>
+
+      <br />
+      <p
+        style="
+          color: #5d5d5d;
+          font-size: 18px;
+          font-weight: 200;
+          width: 70%;
+          line-height: 24px;
+          margin: 0;
+          font-family: Arial, sans-serif;
+        "
+      >
+        {% block email_content %}
+        {% endblock email_content %}
+
+        <br />
+        <br />
+        <br />
+
+        Thanks!
+        <br />
+        <br />
+        The StuCo App Support Team
+      </p>
+
+    </div><!--/end email body-->
+  </div><!--/end wrapper-->
+</body>
+</html>
+

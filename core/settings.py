@@ -14,6 +14,10 @@ import logging
 import os
 from pathlib import Path
 from stuco_app import __version__ as app_version
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 ENVIRONMENT = os.environ.get("ENVIRONMENT", "local")
 
@@ -23,10 +27,13 @@ LOGGER = logging.getLogger(__name__)
 APP_VERSION = app_version
 
 USE_S3_STORAGE = False
-USE_SES_EMAIL = False
 USE_POSTGRES = False
-SYSTEM_EMAIL_SENDER = "noreply@gmail.com"
 
+EMAIL_PROVIDER = os.environ.get("EMAIL_PROVIDER", "console")
+LOGGER.info(f"Email Provider: {EMAIL_PROVIDER}")
+
+SYSTEM_EMAIL_SENDER = os.environ.get("SYSTEM_EMAIL_SENDER", "noreply@gmail.com")
+LOGGER.info(f"Email will be sent from: {SYSTEM_EMAIL_SENDER}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,6 +70,7 @@ INSTALLED_APPS = [
     "django_login_history2",
     "widget_tweaks",
     "stuco_app",
+    "poll",
 ]
 
 MIDDLEWARE = [
@@ -109,6 +117,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -227,12 +236,21 @@ AWS_DEFAULT_REGION = "us-east-1"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_REDIRECT_URL = "/"
 
-if USE_SES_EMAIL:
+DEFAULT_FROM_EMAIL = SYSTEM_EMAIL_SENDER
+if EMAIL_PROVIDER == "ses":
     LOGGER.warning("Using SES Email")
     EMAIL_BACKEND = "django_ses.SESBackend"
     AWS_SES_CONFIGURATION_SET = os.environ.get("AWS_SES_CONFIGURATION_SET", None)
     USE_SES_V2 = True
     AWS_SES_AUTO_THROTTLE = None
+elif EMAIL_PROVIDER == "gmail":
+#gmail_send/settings.py
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", 'yoorusername@gmail.com')
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", 'yourpassword')
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
 else:
     LOGGER.warning("Using Console Email")
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

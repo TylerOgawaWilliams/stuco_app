@@ -16,6 +16,20 @@ class MailSender:
     def __init__(self):
         pass
 
+    def send_app_registration_confirm_email(self, from_email, recipients_list, reply_tos=None, **kwargs):
+        template = get_template("email_templates/app_registration_template.html")
+        html = template.render(kwargs)
+        LOGGER.info(f"Sending email to {recipients_list} . . .")
+
+        self.send_email(
+            from_email=from_email,
+            recipients_list=recipients_list,
+            subject="StuCo App Registration Email Confirmation",
+            text_content="StuCo App Registration Email Confirmation",
+            html_content=html,
+            reply_tos=reply_tos,
+        )
+
     def send_password_reset_confirm_email(self, from_email, recipients_list, reply_tos=None, **kwargs):
         template = get_template("email_templates/password_reset_template.html")
         html = template.render(kwargs)
@@ -24,8 +38,22 @@ class MailSender:
         self.send_email(
             from_email=from_email,
             recipients_list=recipients_list,
-            subject="AOSBP App Password Reset",
-            text_content="AOSBP App Password Reset",
+            subject="StuCo App Password Reset",
+            text_content="StuCo App Password Reset",
+            html_content=html,
+            reply_tos=reply_tos,
+        )
+
+    def send_password_reset_success_email(self, from_email, recipients_list, reply_tos=None, **kwargs):
+        template = get_template("email_templates/password_reset_success_template.html")
+        html = template.render(kwargs)
+        LOGGER.info(f"Sending email to {recipients_list} . . .")
+
+        self.send_email(
+            from_email=from_email,
+            recipients_list=recipients_list,
+            subject="StuCo App Password Has Been Reset",
+            text_content="StuCo App Password Has Been Reset",
             html_content=html,
             reply_tos=reply_tos,
         )
@@ -54,32 +82,36 @@ class MailSender:
                           replies to the message.
         :return: The ID of the message, assigned by Amazon SES.
         """
-
+        LOGGER.info(f"Sending email to {recipients_list} from {from_email}. . .")
         # Create the email message
         if not isinstance(recipients_list, list):
             recipients_list = [recipients_list]
 
         if not from_email:
-            from_email = settings.EMAIL_SENDER
+            from_email = settings.SYSTEM_EMAIL_SENDER
 
-        email_message = EmailMultiAlternatives(subject, "", from_email, recipients_list)
+        email_message = EmailMultiAlternatives(
+            subject,
+            text_content,
+            'Dont Reply <do_not_reply@gmail.com>',
+            to=recipients_list,
+            reply_to=reply_tos
+        )
         email_message.attach_alternative(html_content, "text/html")
 
-        logo_attachment = "templates/email_templates/images/email-logo-header.png"
+        logo_attachment = "templates/email_templates/images/email-logo-header.jpg"
 
         # Define the attachment part and encode it using MIMEApplication.
         att = MIMEApplication(open(logo_attachment, "rb").read())
 
         # Add a header to tell the email client to treat this part as an attachment,
         # and to give the attachment a name.
-        att.add_header("Content-ID", "<logo>")
+        att.add_header("Content-ID", "<stuco-logo>")
         att.add_header("Content-Disposition", "attachment", filename=os.path.basename(logo_attachment))
         # att.set_disposition(f"inline; filename=\"{logo_attachment}\"")
 
         # Add the attachment to the parent container.
         email_message.attach(att)
-        # email_message.attach_alternative(att, "image/png")
-        email_message.send()
         try:
             message_id = email_message.send()
         except Exception:
@@ -104,7 +136,23 @@ if __name__ == "__main__":
 
     my_sender = MailSender()
 
-    my_sender.send_password_reset_confirm_email(
-        from_email=settings.EMAIL_SENDER,
-        recipients_list=["PUT_EMAIL_ADDRESS_HERE"],
+    # my_sender.send_password_reset_confirm_email(
+    #     from_email=settings.SYSTEM_EMAIL_SENDER,
+    #     recipients_list=["rwolf@cisco.com"],
+    #     confirmation_code="123456",
+    #     first_name="Tyler",
+    # )
+
+    # my_sender.send_password_reset_success_email(
+    #     from_email=settings.SYSTEM_EMAIL_SENDER,
+    #     recipients_list=["rwolf@cisco.com"],
+    #     confirmation_code="123456",
+    #     first_name="Tyler",
+    # )
+
+    my_sender.send_app_registration_confirm_email(
+        from_email=settings.SYSTEM_EMAIL_SENDER,
+        recipients_list=["rwolf@cisco.com"],
+        confirmation_code="123456",
+        first_name="Tyler",
     )

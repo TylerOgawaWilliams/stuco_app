@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <link href="{% static 'images/cmu-seal-r.png' %}" rel="icon" />
+    {% block extra-links %}{% endblock %}
     <title>StuCo App  - {% block title %}{% endblock %}</title>
   </head>
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
@@ -49,6 +50,9 @@
               <a href="{% url 'about' %}" class="nav-link fw-normal">About</a>
             </li>
             {% if user.is_authenticated %}
+                {% comment %} <li class="nav-item">
+                  <a href="{% url 'list_polls' %}" class="nav-link fw-normal">Polls</a>
+                </li> {% endcomment %}
                 {% if user.is_superuser %}
                 <li class="nav-item">
                   <a href="{% url 'admin:login' %}" class="nav-link fw-normal">Admin</a>
