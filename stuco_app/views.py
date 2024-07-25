@@ -12,9 +12,12 @@ def about(request):
 
 
 def home(request):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO, "Note: Login for access to all features . . .")
+
     return render(request, "home.html")
 
 
 def django_login(request):
-    messages.add_message(request, messages.INFO, "Note: Login for access to all features . . .")
-    return redirect("/admin/login/?next=/")
+    # return redirect("/admin/login/?next=/")
+    return redirect("/accounts/login/?next=/")

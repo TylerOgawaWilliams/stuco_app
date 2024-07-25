@@ -15,19 +15,17 @@ class CustomUserManager(BaseUserManager):
 
     def create_user(
         self,
-        username=None,
-        email=None,
+        email,
         middle_name=None,
         password=None,
         **extra_fields,
     ):
         """Create and save a User with the given email and password."""
         if not email:
-            email = f"{username}@gmail.com"
+            raise ValueError(_("The Email must be set"))
         email = self.normalize_email(email)
         extra_fields.setdefault("is_active", True)
         user = self.model(
-            username=username,
             email=email,
             middle_name=middle_name,
             **extra_fields,
@@ -39,7 +37,6 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(
         self,
-        username,
         email,
         password,
         middle_name=None,
@@ -50,8 +47,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
         return self.create_user(
-            username=username,
-            email=email,
+            email,
             password=password,
             middle_name=middle_name,
             **extra_fields,
@@ -62,16 +58,16 @@ class CustomUser(AbstractUser):
     """Custom User model."""
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # username = None  # ensure no username field
+    username = None  # ensure no username field
+
     email = models.EmailField(_("email address"), unique=True)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_login = models.DateTimeField(null=True, blank=True, auto_now=True)
 
     # Make email field the unique identifier for users
-    # USERNAME_FIELD = "email"
+    USERNAME_FIELD = "email"
     objects = CustomUserManager()
     REQUIRED_FIELDS = [
-        "email",
         "first_name",
         "last_name",
     ]

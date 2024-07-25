@@ -27,10 +27,12 @@ login_path = django_login_path
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url="/static/assets/img/favicon.png")),
     path("admin/", admin.site.urls),
+    path("accounts/user/", include("users.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     login_path,
     path("about/", home_views.about, name="about"),
     path("files/", include("file_uploads.urls")),
+    path("polls/", include("poll.urls")),
     path("", home_views.home, name="home"),
 ]
 

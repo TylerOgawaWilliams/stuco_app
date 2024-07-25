@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from users.forms import CustomUserCreationForm, CustomUserChangeForm
 from users.models import CustomUser
+from django.db.models.functions import Lower
 
 
 # Register your models here.
@@ -11,16 +12,16 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     readonly_fields = ("last_login",)
     list_display = (
-        "username",
         "email",
         "first_name",
         "last_name",
         "is_staff",
         "is_active",
         "last_login",
+        "member_of_groups"
     )
     list_filter = (
-        "username",
+        "groups",
         "email",
         "first_name",
         "last_name",
@@ -53,7 +54,10 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     search_fields = ("email",)
-    ordering = ("email",)
+    ordering = (Lower("last_name"), Lower("first_name"))
+
+    def member_of_groups(self, obj):
+        return ",".join([g.name for g in obj.groups.all()])
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

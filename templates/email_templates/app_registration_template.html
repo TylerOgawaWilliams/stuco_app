@@ -1,0 +1,46 @@
+{% extends "email_templates/email_base.html" %}
+
+{% block title %}Thank you for Registering Email{% endblock title %}
+
+{% block message_heading %}Thank you for registering with the StuCo App!{% endblock message_heading %}
+
+{% block email_content %}
+        Your confirmation code is:
+        <br />
+        <h2>{{ confirmation_code }}</h2>
+        <br />
+        This email serves as a confirmation that your account was successfully created, but you will not be able to login to the web app
+        until you confirm your email address.
+        <br />
+        <br />
+
+          Confirm your email address to get started using the
+          <a
+            href="{{ webapp_base_url }}/confirm_email?confirmation_code={{ confirmation_code }}"
+            style="color: #0074a6"
+          >
+            StuCo App Website
+          </a>.
+        </p>
+        <a
+          style="
+            border: none;
+            border-radius: 3px;
+            display: inline-block;
+            font-size: 16px;
+            padding: 16px 20px 15px;
+            overflow: hidden;
+            text-decoration: none;
+            background: #9062ad;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            margin: 30px 0;
+            font-family: Arial, sans-serif;
+          "
+          href="{{ webapp_base_url }}/confirm_email?confirmation_code={{ confirmation_code }}"
+          >
+          Confirm Email Address
+        </a>
+{% endblock %}
