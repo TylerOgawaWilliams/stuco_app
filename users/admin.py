@@ -30,7 +30,7 @@ class CustomUserAdmin(UserAdmin):
         "last_login",
     )
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
+        (None, {"fields": ("username", "email", "password")}),
         ("Name Info", {"fields": ("first_name", "last_name")}),
         ("Login Info", {"fields": ("last_login",)}),
         ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
@@ -42,6 +42,7 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "first_name",
                     "last_name",
+                    "username",
                     "email",
                     "password1",
                     "password2",

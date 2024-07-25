@@ -49,6 +49,9 @@
             <li class="nav-item">
               <a href="{% url 'about' %}" class="nav-link fw-normal">About</a>
             </li>
+            <li>
+              <a href="{% url 'list' %}" class="nav-link fw-normal">Polls</a>
+            </li>
             {% if user.is_authenticated %}
                 {% comment %} <li class="nav-item">
                   <a href="{% url 'list_polls' %}" class="nav-link fw-normal">Polls</a>

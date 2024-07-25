@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "auditlog",
     "users",  # custom users app
     "file_uploads",
+    "polls",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -70,7 +71,6 @@ INSTALLED_APPS = [
     "django_login_history2",
     "widget_tweaks",
     "stuco_app",
-    "poll",
 ]
 
 MIDDLEWARE = [

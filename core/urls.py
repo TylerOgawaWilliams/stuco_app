@@ -32,7 +32,7 @@ urlpatterns = [
     login_path,
     path("about/", home_views.about, name="about"),
     path("files/", include("file_uploads.urls")),
-    path("polls/", include("poll.urls")),
+    path("polls/", include("polls.urls")),
     path("", home_views.home, name="home"),
 ]
 
